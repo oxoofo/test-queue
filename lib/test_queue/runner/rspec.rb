@@ -37,6 +37,8 @@ module TestQueue
 
   class TestFramework
     class RSpec < TestFramework
+      @@loader = ::RSpec::Core::Configuration.new
+
       def all_suite_files
         options = ::RSpec::Core::ConfigurationOptions.new(ARGV)
         options.parse_options if options.respond_to?(:parse_options)
@@ -47,7 +49,7 @@ module TestQueue
 
       def suites_from_file(path)
         ::RSpec.world.example_groups.clear
-        load path
+        @@loader.load path
         split_groups(::RSpec.world.example_groups).map { |example_or_group|
           name = if example_or_group.respond_to?(:id)
                    example_or_group.id
